@@ -1,0 +1,1046 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>UniLink – ABC University Student Enquiry System</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700;900&family=DM+Sans:wght@300;400;500;600&display=swap" rel="stylesheet">
+<style>
+:root {
+  --navy:#0a1628; --navy2:#112240; --teal:#0d9488; --teal-light:#14b8a6;
+  --gold:#f59e0b; --white:#ffffff;
+  --gray-400:#9ca3af; --red:#ef4444; --green:#22c55e; --orange:#f97316; --blue:#3b82f6;
+  --shadow-lg:0 8px 40px rgba(0,0,0,0.22);
+}
+*{margin:0;padding:0;box-sizing:border-box;}
+body{font-family:'DM Sans',sans-serif;background:var(--navy);color:#fff;min-height:100vh;overflow-x:hidden;}
+
+/* ── LOGIN ── */
+#loginScreen{position:fixed;inset:0;background:var(--navy);z-index:9000;display:flex;align-items:stretch;}
+.ll{flex:1;background:linear-gradient(145deg,#0a1628,#0d2a4a 55%,#062a2a);display:flex;flex-direction:column;justify-content:center;padding:64px;position:relative;overflow:hidden;}
+.ll::before{content:'';position:absolute;top:-140px;left:-120px;width:420px;height:420px;background:radial-gradient(circle,rgba(13,148,136,.18),transparent 70%);border-radius:50%;}
+.ll::after{content:'';position:absolute;bottom:-80px;right:-80px;width:300px;height:300px;background:radial-gradient(circle,rgba(245,158,11,.1),transparent 70%);border-radius:50%;}
+.lbt{font-family:'Playfair Display',serif;font-size:46px;font-weight:900;letter-spacing:-1.5px;line-height:1;}
+.lbt span{color:var(--teal-light);}
+.lbs{font-size:11px;color:var(--gray-400);letter-spacing:2.5px;text-transform:uppercase;margin-top:8px;font-weight:500;}
+.ltag{font-family:'Playfair Display',serif;font-size:28px;font-weight:700;line-height:1.35;max-width:420px;margin:40px 0 14px;color:rgba(255,255,255,.9);}
+.ldesc{font-size:14px;color:var(--gray-400);max-width:380px;line-height:1.75;margin-bottom:40px;}
+.lfeats{display:flex;flex-direction:column;gap:13px;}
+.lfeat{display:flex;align-items:center;gap:13px;font-size:13px;color:rgba(255,255,255,.7);}
+.lfi{width:34px;height:34px;background:rgba(13,148,136,.15);border:1px solid rgba(13,148,136,.3);border-radius:9px;display:flex;align-items:center;justify-content:center;font-size:15px;flex-shrink:0;}
+.lr{width:500px;background:rgba(17,34,64,.98);border-left:1px solid rgba(255,255,255,.07);display:flex;flex-direction:column;justify-content:center;padding:56px 52px;}
+.lft{font-family:'Playfair Display',serif;font-size:26px;font-weight:700;margin-bottom:4px;}
+.lfs{font-size:14px;color:var(--gray-400);margin-bottom:32px;}
+.rcards{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:28px;}
+.rcard{background:rgba(255,255,255,.03);border:1.5px solid rgba(255,255,255,.08);border-radius:12px;padding:14px;cursor:pointer;transition:all .2s;text-align:left;}
+.rcard:hover{border-color:rgba(13,148,136,.4);background:rgba(13,148,136,.06);}
+.rcard.sel{border-color:var(--teal);background:rgba(13,148,136,.1);}
+.rci{font-size:20px;margin-bottom:6px;}
+.rcn{font-size:13px;font-weight:700;}
+.rcu{font-size:11px;color:var(--gray-400);margin-top:2px;}
+.rcb{display:inline-block;margin-top:6px;padding:2px 8px;border-radius:20px;font-size:10px;font-weight:600;background:rgba(13,148,136,.15);color:var(--teal-light);}
+.ldiv{display:flex;align-items:center;gap:12px;margin-bottom:22px;font-size:12px;color:var(--gray-400);}
+.ldiv::before,.ldiv::after{content:'';flex:1;height:1px;background:rgba(255,255,255,.08);}
+.lfield{margin-bottom:15px;}
+.llbl{font-size:12px;color:var(--gray-400);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:7px;display:block;}
+.linp{width:100%;background:rgba(255,255,255,.05);border:1.5px solid rgba(255,255,255,.1);border-radius:10px;padding:12px 16px;color:#fff;font-family:'DM Sans',sans-serif;font-size:14px;outline:none;transition:border-color .2s,background .2s;}
+.linp:focus{border-color:var(--teal);background:rgba(13,148,136,.05);}
+.linp::placeholder{color:var(--gray-400);}
+.linp.err{border-color:var(--red);}
+.lerr{background:rgba(239,68,68,.1);border:1px solid rgba(239,68,68,.3);border-radius:8px;padding:10px 14px;font-size:13px;color:#fca5a5;margin-bottom:14px;display:none;}
+.pwrap{position:relative;}
+.ptog{position:absolute;right:14px;top:50%;transform:translateY(-50%);background:none;border:none;color:var(--gray-400);cursor:pointer;font-size:16px;}
+.lbtn{width:100%;padding:14px;background:linear-gradient(135deg,var(--teal),var(--teal-light));border:none;border-radius:10px;color:#fff;font-family:'DM Sans',sans-serif;font-size:15px;font-weight:700;cursor:pointer;transition:all .2s;margin-top:6px;}
+.lbtn:hover{transform:translateY(-2px);box-shadow:0 6px 20px rgba(13,148,136,.4);}
+.lbtn:disabled{opacity:.6;cursor:not-allowed;transform:none;}
+.lhint{text-align:center;margin-top:18px;font-size:12px;color:var(--gray-400);}
+.lhint a{color:var(--teal-light);cursor:pointer;}
+@keyframes spin{to{transform:rotate(360deg)}}
+.spin{display:inline-block;width:15px;height:15px;border:2px solid rgba(255,255,255,.3);border-top-color:#fff;border-radius:50%;animation:spin .7s linear infinite;vertical-align:middle;margin-right:7px;}
+@keyframes lfo{to{opacity:0;transform:scale(.97)}}
+.lfo{animation:lfo .4s forwards;}
+
+/* ── APP ── */
+#mainApp{display:none;}
+.app{display:flex;min-height:100vh;}
+.sidebar{width:256px;background:var(--navy2);border-right:1px solid rgba(255,255,255,.06);display:flex;flex-direction:column;position:fixed;top:0;left:0;height:100vh;z-index:100;}
+.logo-area{padding:26px 22px 18px;border-bottom:1px solid rgba(255,255,255,.06);}
+.logo-title{font-family:'Playfair Display',serif;font-size:22px;font-weight:900;letter-spacing:-.5px;}
+.logo-sub{font-size:10px;color:var(--teal-light);letter-spacing:2px;text-transform:uppercase;margin-top:2px;font-weight:500;}
+.ucard{margin:14px 12px;background:rgba(13,148,136,.1);border:1px solid rgba(13,148,136,.22);border-radius:10px;padding:12px 14px;}
+.uc-role{font-size:10px;color:var(--teal-light);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;margin-bottom:3px;}
+.uc-name{font-weight:600;font-size:14px;}
+.uc-email{font-size:11px;color:var(--gray-400);margin-top:2px;}
+nav{flex:1;padding:6px 0;overflow-y:auto;}
+.nav-sec{padding:12px 16px 4px;font-size:10px;color:var(--gray-400);text-transform:uppercase;letter-spacing:1.5px;font-weight:600;}
+.nav-item{display:flex;align-items:center;gap:10px;padding:10px 20px;cursor:pointer;transition:all .2s;color:var(--gray-400);font-size:14px;border-left:3px solid transparent;}
+.nav-item:hover{color:#fff;background:rgba(255,255,255,.04);}
+.nav-item.active{color:var(--teal-light);border-left-color:var(--teal);background:rgba(13,148,136,.08);}
+.nav-icon{font-size:15px;width:20px;text-align:center;}
+.nbadge{margin-left:auto;background:var(--gold);color:var(--navy);font-size:10px;font-weight:700;padding:1px 6px;border-radius:20px;}
+.main{margin-left:256px;flex:1;display:flex;flex-direction:column;min-height:100vh;}
+.topbar{background:rgba(10,22,40,.96);backdrop-filter:blur(10px);border-bottom:1px solid rgba(255,255,255,.06);padding:13px 30px;display:flex;align-items:center;gap:14px;position:sticky;top:0;z-index:50;}
+.page-title{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;}
+.tright{margin-left:auto;display:flex;align-items:center;gap:10px;}
+.content{padding:26px 30px;flex:1;}
+
+/* ── BUTTONS ── */
+.btn{padding:8px 18px;border-radius:8px;border:none;cursor:pointer;font-family:'DM Sans',sans-serif;font-size:13px;font-weight:600;transition:all .2s;}
+.bp{background:var(--teal);color:#fff;}.bp:hover{background:var(--teal-light);transform:translateY(-1px);box-shadow:0 4px 12px rgba(13,148,136,.4);}
+.bo{background:transparent;color:var(--teal-light);border:1px solid var(--teal);}.bo:hover{background:rgba(13,148,136,.1);}
+.bg{background:rgba(255,255,255,.06);color:var(--gray-400);border:1px solid rgba(255,255,255,.1);}.bg:hover{background:rgba(255,255,255,.1);color:#fff;}
+.bw{background:rgba(245,158,11,.15);color:var(--gold);border:1px solid rgba(245,158,11,.3);}.bw:hover{background:rgba(245,158,11,.25);}
+.bsm{padding:5px 12px;font-size:12px;}
+
+/* ── PAGES ── */
+.page{display:none;}
+.page.active{display:block;animation:fi .3s ease;}
+@keyframes fi{from{opacity:0;transform:translateY(5px)}to{opacity:1;transform:translateY(0)}}
+
+/* ── CARDS ── */
+.card{background:var(--navy2);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:22px;}
+.ct{font-family:'Playfair Display',serif;font-size:16px;font-weight:700;margin-bottom:16px;display:flex;align-items:center;gap:8px;}
+.sgrid{display:grid;grid-template-columns:repeat(4,1fr);gap:15px;margin-bottom:22px;}
+.sc{background:var(--navy2);border:1px solid rgba(255,255,255,.07);border-radius:14px;padding:20px;transition:transform .2s;cursor:pointer;}
+.sc:hover{transform:translateY(-2px);}
+.sl{font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:1px;font-weight:600;}
+.sv{font-family:'Playfair Display',serif;font-size:34px;font-weight:700;margin:6px 0;}
+.sd{font-size:12px;}
+.du{color:var(--green);}
+.dd{color:var(--red);}
+.gc2{display:grid;grid-template-columns:2fr 1fr;gap:18px;margin-bottom:20px;}
+.gc3{display:grid;grid-template-columns:repeat(3,1fr);gap:15px;margin-bottom:20px;}
+
+/* ── PILLS ── */
+.pill{display:inline-block;padding:3px 10px;border-radius:20px;font-size:11px;font-weight:600;}
+.pg{background:rgba(34,197,94,.15);color:var(--green);}
+.pr{background:rgba(239,68,68,.15);color:var(--red);}
+.py{background:rgba(245,158,11,.15);color:var(--gold);}
+.pb{background:rgba(59,130,246,.15);color:var(--blue);}
+.pgy{background:rgba(255,255,255,.08);color:var(--gray-400);}
+.pt{background:rgba(13,148,136,.2);color:var(--teal-light);}
+.po{background:rgba(249,115,22,.15);color:var(--orange);}
+
+/* ── TABLE ── */
+.tw{background:var(--navy2);border:1px solid rgba(255,255,255,.07);border-radius:14px;overflow:hidden;}
+table.dt{width:100%;border-collapse:collapse;}
+.dt th{background:rgba(255,255,255,.04);text-align:left;padding:11px 15px;font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:1px;font-weight:600;white-space:nowrap;}
+.dt td{padding:12px 15px;font-size:13px;border-top:1px solid rgba(255,255,255,.04);vertical-align:middle;}
+.dt tr:hover td{background:rgba(255,255,255,.02);cursor:pointer;}
+.eid{font-family:monospace;font-size:11px;color:var(--teal-light);}
+.toolbar{display:flex;gap:10px;margin-bottom:16px;align-items:center;flex-wrap:wrap;}
+.sbox{flex:1;min-width:200px;background:var(--navy2);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:9px 13px;color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;}
+.sbox:focus{border-color:var(--teal);}
+.sbox::placeholder{color:var(--gray-400);}
+.fsel{background:var(--navy2);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:9px 13px;color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;cursor:pointer;}
+.fsel option{background:var(--navy2);}
+
+/* ── FORMS ── */
+.fg2{display:grid;grid-template-columns:1fr 1fr;gap:14px;}
+.ff{grid-column:1/-1;}
+.fg{display:flex;flex-direction:column;gap:5px;}
+.fl{font-size:12px;color:var(--gray-400);font-weight:600;text-transform:uppercase;letter-spacing:.5px;}
+.fi,.fsl,.fta{background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:10px 13px;color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;transition:border-color .2s;width:100%;}
+.fi:focus,.fsl:focus,.fta:focus{border-color:var(--teal);}
+.fsl option{background:var(--navy2);}
+.fta{resize:vertical;min-height:85px;}
+.fa{display:flex;gap:10px;justify-content:flex-end;margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.07);}
+
+/* ── MODAL ── */
+.mo{display:none;position:fixed;inset:0;background:rgba(0,0,0,.7);backdrop-filter:blur(4px);z-index:999;align-items:center;justify-content:center;}
+.mo.open{display:flex;animation:fi .2s;}
+.modal{background:var(--navy2);border:1px solid rgba(255,255,255,.1);border-radius:18px;width:90%;max-width:660px;max-height:85vh;overflow-y:auto;padding:28px;}
+.mh{display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:20px;}
+.mt{font-family:'Playfair Display',serif;font-size:20px;font-weight:700;}
+.mc{background:rgba(255,255,255,.08);border:none;color:#fff;width:30px;height:30px;border-radius:6px;cursor:pointer;font-size:16px;display:flex;align-items:center;justify-content:center;}
+
+/* ── DETAIL ── */
+.dgrid{display:grid;grid-template-columns:1fr 320px;gap:18px;}
+.dmeta{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-bottom:16px;}
+.mi{background:rgba(255,255,255,.04);border-radius:8px;padding:11px;}
+.mil{font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:1px;margin-bottom:3px;font-weight:600;}
+.miv{font-size:14px;font-weight:500;}
+.thread{display:flex;flex-direction:column;gap:12px;}
+.bubble{background:rgba(255,255,255,.04);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:13px;}
+.bubble.staff{border-left:3px solid var(--teal);}
+.mhdr{display:flex;justify-content:space-between;align-items:center;margin-bottom:7px;}
+.msend{font-size:13px;font-weight:600;}
+.mtime{font-size:11px;color:var(--gray-400);}
+.mbody{font-size:13px;line-height:1.6;color:rgba(255,255,255,.8);}
+.rbox{margin-top:13px;background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.08);border-radius:10px;padding:12px;}
+.apanel{display:flex;flex-direction:column;gap:13px;}
+.asec{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.07);border-radius:10px;padding:13px;}
+.ast{font-size:11px;color:var(--teal-light);text-transform:uppercase;letter-spacing:1px;font-weight:700;margin-bottom:9px;}
+.abg{display:flex;flex-direction:column;gap:6px;}
+
+/* ── GAUGE ── */
+.gi{margin-bottom:10px;}
+.gh{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px;}
+.gn{font-size:13px;font-weight:500;}
+.gv{display:flex;gap:8px;align-items:center;font-size:12px;}
+.ga{font-weight:700;font-size:15px;}
+.gt{color:var(--gray-400);}
+.gtr{background:rgba(255,255,255,.07);border-radius:6px;height:7px;}
+.gf{height:7px;border-radius:6px;transition:width .5s ease;}
+
+/* ── CALENDAR ── */
+.cg{display:grid;grid-template-columns:repeat(7,1fr);gap:4px;margin-bottom:18px;}
+.ch{text-align:center;padding:5px;font-size:11px;color:var(--gray-400);font-weight:600;text-transform:uppercase;}
+.cd{background:rgba(255,255,255,.03);border:1px solid rgba(255,255,255,.06);border-radius:8px;padding:7px;min-height:72px;cursor:pointer;transition:all .2s;}
+.cd:hover{background:rgba(13,148,136,.08);border-color:var(--teal);}
+.cd.today{border-color:var(--gold);background:rgba(245,158,11,.06);}
+.cd.ha{border-color:rgba(13,148,136,.3);}
+.cn{font-size:12px;font-weight:600;color:var(--gray-400);margin-bottom:3px;}
+.cd.today .cn{color:var(--gold);}
+.ca{background:var(--teal);border-radius:4px;padding:2px 4px;font-size:9px;margin-bottom:2px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;}
+.ca.online{background:rgba(59,130,246,.7);}
+.al{display:flex;flex-direction:column;gap:11px;}
+.ac{background:var(--navy2);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:14px;display:flex;align-items:center;gap:14px;transition:transform .2s;}
+.ac:hover{transform:translateX(3px);}
+.atb{text-align:center;min-width:54px;}
+.at{font-family:'Playfair Display',serif;font-size:18px;font-weight:700;color:var(--teal-light);}
+.aa{font-size:10px;color:var(--gray-400);}
+.adv{width:1px;background:rgba(255,255,255,.08);align-self:stretch;}
+.ai{flex:1;}
+.ast2{font-weight:600;font-size:14px;}
+.atop{font-size:12px;color:var(--gray-400);margin-top:1px;}
+
+/* ── ACTIVITY ── */
+.af{display:flex;flex-direction:column;gap:10px;}
+.aitem{display:flex;gap:11px;align-items:flex-start;padding:10px;background:rgba(255,255,255,.03);border-radius:8px;border:1px solid rgba(255,255,255,.05);}
+.aico{width:30px;height:30px;border-radius:7px;display:flex;align-items:center;justify-content:center;font-size:13px;flex-shrink:0;}
+.atxt{font-size:13px;}
+.atime{font-size:11px;color:var(--gray-400);margin-top:1px;}
+
+/* ── ORG ── */
+.org-tree{text-align:center;padding:16px 0;}
+.onw{display:inline-flex;flex-direction:column;align-items:center;}
+.on{background:var(--navy2);border:2px solid rgba(13,148,136,.35);border-radius:12px;padding:12px 18px;min-width:170px;transition:all .2s;cursor:default;}
+.on:hover{border-color:var(--teal);transform:translateY(-2px);}
+.on.director{border-color:var(--gold);background:rgba(245,158,11,.07);}
+.on.manager{border-color:var(--teal);background:rgba(13,148,136,.07);}
+.onn{font-weight:700;font-size:13px;}
+.onr{font-size:11px;color:var(--gray-400);margin-top:2px;}
+.ol{width:2px;height:22px;background:rgba(255,255,255,.1);margin:0 auto;}
+.oc{display:flex;gap:10px;align-items:flex-start;flex-wrap:wrap;justify-content:center;}
+.ocw{display:flex;flex-direction:column;align-items:center;}
+
+/* ── PORTAL ── */
+.phero{background:linear-gradient(135deg,rgba(13,148,136,.18),rgba(10,22,40,.4));border:1px solid rgba(13,148,136,.28);border-radius:18px;padding:30px;margin-bottom:22px;position:relative;overflow:hidden;}
+.phero::before{content:'';position:absolute;top:-50px;right:-50px;width:180px;height:180px;background:radial-gradient(circle,rgba(13,148,136,.18),transparent 70%);border-radius:50%;}
+.phero h2{font-family:'Playfair Display',serif;font-size:26px;font-weight:900;margin-bottom:5px;}
+.phero p{color:var(--gray-400);font-size:14px;max-width:480px;}
+.ec{background:var(--navy2);border:1px solid rgba(255,255,255,.07);border-radius:12px;padding:16px;transition:all .2s;cursor:pointer;}
+.ec:hover{border-color:rgba(13,148,136,.4);transform:translateY(-2px);}
+.eg{display:flex;flex-direction:column;gap:12px;}
+.esub{font-weight:600;font-size:15px;margin-bottom:3px;}
+.emeta{font-size:12px;color:var(--gray-400);}
+
+/* ── CHATBOT ── */
+.cbc{position:fixed;bottom:26px;right:26px;z-index:200;}
+.ctog{width:52px;height:52px;background:linear-gradient(135deg,var(--teal),var(--teal-light));border:none;border-radius:50%;cursor:pointer;box-shadow:0 4px 18px rgba(13,148,136,.5);font-size:20px;display:flex;align-items:center;justify-content:center;transition:transform .2s;color:#fff;}
+.ctog:hover{transform:scale(1.1);}
+.cwin{display:none;position:absolute;bottom:66px;right:0;width:330px;background:var(--navy2);border:1px solid rgba(255,255,255,.1);border-radius:18px;overflow:hidden;box-shadow:var(--shadow-lg);}
+.cwin.open{display:flex;flex-direction:column;animation:fi .3s;}
+.chdr{background:linear-gradient(135deg,var(--teal),#0891b2);padding:13px 16px;display:flex;align-items:center;gap:10px;}
+.cav{width:34px;height:34px;background:rgba(255,255,255,.2);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:16px;}
+.cname{font-weight:700;font-size:14px;}
+.cstat{font-size:11px;opacity:.8;}
+.cx{margin-left:auto;background:none;border:none;color:#fff;cursor:pointer;font-size:16px;}
+.cmsgs{flex:1;padding:14px;overflow-y:auto;display:flex;flex-direction:column;gap:9px;max-height:280px;}
+.cm{max-width:80%;}
+.cm.bot{align-self:flex-start;}
+.cm.user{align-self:flex-end;}
+.cb{padding:9px 12px;border-radius:12px;font-size:13px;line-height:1.5;}
+.cm.bot .cb{background:rgba(255,255,255,.07);border-radius:12px 12px 12px 3px;}
+.cm.user .cb{background:var(--teal);border-radius:12px 12px 3px 12px;}
+.qrs{display:flex;flex-wrap:wrap;gap:5px;padding:0 14px 10px;}
+.qr{padding:4px 11px;background:rgba(13,148,136,.15);border:1px solid rgba(13,148,136,.3);border-radius:20px;font-size:12px;cursor:pointer;color:var(--teal-light);transition:all .2s;font-family:'DM Sans',sans-serif;}
+.qr:hover{background:var(--teal);color:#fff;border-color:var(--teal);}
+.cir{display:flex;gap:7px;padding:10px 14px;border-top:1px solid rgba(255,255,255,.06);}
+.cinp{flex:1;background:rgba(255,255,255,.05);border:1px solid rgba(255,255,255,.1);border-radius:8px;padding:8px 11px;color:#fff;font-family:'DM Sans',sans-serif;font-size:13px;outline:none;}
+.cinp::placeholder{color:var(--gray-400);}
+.csend{background:var(--teal);border:none;border-radius:8px;width:34px;height:34px;cursor:pointer;color:#fff;font-size:14px;display:flex;align-items:center;justify-content:center;}
+
+/* ── TOAST ── */
+.tc{position:fixed;top:76px;right:22px;z-index:9999;display:flex;flex-direction:column;gap:7px;}
+.toast{background:var(--navy2);border:1px solid rgba(255,255,255,.1);border-left:4px solid var(--teal);border-radius:10px;padding:11px 14px;min-width:270px;box-shadow:var(--shadow-lg);animation:si .3s ease;display:flex;align-items:center;gap:9px;}
+.toast.te{border-left-color:var(--red);}
+.toast.tw{border-left-color:var(--gold);}
+@keyframes si{from{opacity:0;transform:translateX(28px)}to{opacity:1;transform:translateX(0)}}
+
+.kpt{width:100%;border-collapse:collapse;}
+.kpt th{text-align:left;font-size:11px;color:var(--gray-400);text-transform:uppercase;letter-spacing:1px;padding:5px 8px;font-weight:600;border-bottom:1px solid rgba(255,255,255,.07);}
+.kpt td{padding:9px 8px;border-bottom:1px solid rgba(255,255,255,.04);font-size:13px;}
+.kbt{background:rgba(255,255,255,.08);border-radius:4px;height:6px;width:90px;}
+.kbf{height:6px;border-radius:4px;}
+::-webkit-scrollbar{width:3px;height:3px;}
+::-webkit-scrollbar-thumb{background:rgba(255,255,255,.15);border-radius:2px;}
+</style>
+</head>
+<body>
+
+<!-- ══ LOGIN ══ -->
+<div id="loginScreen">
+  <div class="ll">
+    <div>
+      <div class="lbt">Uni<span>Link</span></div>
+      <div class="lbs">ABC University · Student Support Services</div>
+    </div>
+    <div class="ltag">One platform for every student enquiry.</div>
+    <div class="ldesc">UniLink centralises enquiry management, appointment scheduling, and service analytics — connecting students and staff seamlessly.</div>
+    <div class="lfeats">
+      <div class="lfeat"><div class="lfi">📋</div>Centralised enquiry tracking &amp; management</div>
+      <div class="lfeat"><div class="lfi">📅</div>Integrated appointment scheduling</div>
+      <div class="lfeat"><div class="lfi">📊</div>Real-time KPI dashboards &amp; reports</div>
+      <div class="lfeat"><div class="lfi">🤖</div>AI-powered chatbot for student guidance</div>
+    </div>
+  </div>
+  <div class="lr">
+    <div class="lft">Welcome back</div>
+    <div class="lfs">Sign in to your UniLink account</div>
+    <div style="font-size:12px;color:var(--gray-400);font-weight:600;text-transform:uppercase;letter-spacing:.5px;margin-bottom:10px">Quick Sign-In — Select your role</div>
+    <div class="rcards">
+      <div class="rcard" onclick="selRole('student')" id="rc-student"><div class="rci">🎓</div><div class="rcn">Student</div><div class="rcu">Nguyen Van An</div><div class="rcb">Submit Enquiries</div></div>
+      <div class="rcard" onclick="selRole('admin')" id="rc-admin"><div class="rci">📋</div><div class="rcn">Admin Officer</div><div class="rcu">Lily Tran</div><div class="rcb">Triage &amp; Assign</div></div>
+      <div class="rcard" onclick="selRole('officer')" id="rc-officer"><div class="rci">🧑‍💼</div><div class="rcn">Support Officer</div><div class="rcu">Sarah Chen</div><div class="rcb">Resolve Cases</div></div>
+      <div class="rcard sel" onclick="selRole('manager')" id="rc-manager"><div class="rci">👩‍💼</div><div class="rcn">Manager</div><div class="rcu">Karen Thompson</div><div class="rcb">Full Access</div></div>
+    </div>
+    <div class="ldiv">or sign in manually</div>
+    <div id="lerr" class="lerr">⚠️ <span id="lerrMsg">Invalid email or password.</span></div>
+    <div class="lfield"><label class="llbl">University Email</label><input class="linp" type="email" id="lemail" placeholder="yourname@abc.edu.au" value="karen.thompson@abc.edu.au"></div>
+    <div class="lfield"><label class="llbl">Password</label><div class="pwrap"><input class="linp" type="password" id="lpw" placeholder="Enter your password" value="password123" onkeypress="if(event.key==='Enter')doLogin()"><button class="ptog" onclick="togglePw()">👁</button></div></div>
+    <div style="display:flex;justify-content:flex-end;margin-bottom:18px"><a style="font-size:12px;color:var(--teal-light);cursor:pointer" onclick="toast('Password reset link sent.','info')">Forgot password?</a></div>
+    <button class="lbtn" id="lbtn" onclick="doLogin()">Sign In to UniLink</button>
+    <div class="lhint">Select a role card to auto-fill credentials, then click <strong>Sign In</strong>.<br>Need help? <a onclick="toast('IT Support: it.support@abc.edu.au','info')">Contact IT Support</a></div>
+  </div>
+</div>
+
+<!-- ══ MAIN APP ══ -->
+<div id="mainApp">
+<div class="app">
+  <aside class="sidebar">
+    <div class="logo-area"><div class="logo-title">UniLink</div><div class="logo-sub">ABC University · Student Services</div></div>
+    <div class="ucard"><div class="uc-role" id="ucRole">Manager</div><div class="uc-name" id="ucName">Karen Thompson</div><div class="uc-email" id="ucEmail">karen.thompson@abc.edu.au</div></div>
+    <nav id="sideNav"></nav>
+  </aside>
+  <main class="main">
+    <div class="topbar"><div class="page-title" id="pgTitle">Dashboard</div><div class="tright" id="tright"></div></div>
+    <div class="content" id="ca"></div>
+  </main>
+</div>
+</div>
+
+<!-- ══ MODALS ══ -->
+<div class="mo" id="mNewEnq">
+  <div class="modal">
+    <div class="mh"><div><div class="mt">Log New Enquiry</div><div style="font-size:12px;color:var(--gray-400);margin-top:2px">Record a student enquiry</div></div><button class="mc" onclick="cm('mNewEnq')">✕</button></div>
+    <div class="fg2">
+      <div class="fg"><label class="fl">Student Name *</label><input class="fi" id="mn-name" placeholder="Full name"></div>
+      <div class="fg"><label class="fl">Student ID *</label><input class="fi" id="mn-sid" placeholder="S123456"></div>
+      <div class="fg"><label class="fl">Email</label><input class="fi" id="mn-email" placeholder="student@abc.edu.au"></div>
+      <div class="fg"><label class="fl">Category *</label><select class="fsl" id="mn-cat"><option value="">Select</option><option>Academic</option><option>Visa / International</option><option>Financial</option><option>Welfare</option><option>Graduation &amp; Career</option><option>General</option></select></div>
+      <div class="fg"><label class="fl">Type</label><select class="fsl" id="mn-type"><option>General</option><option>Complex</option></select></div>
+      <div class="fg"><label class="fl">Channel</label><select class="fsl" id="mn-ch"><option>Email</option><option>Phone</option><option>Walk-in</option></select></div>
+      <div class="fg ff"><label class="fl">Subject *</label><input class="fi" id="mn-subj" placeholder="Brief subject"></div>
+      <div class="fg ff"><label class="fl">Description</label><textarea class="fta" id="mn-desc" placeholder="Details…"></textarea></div>
+    </div>
+    <div class="fa"><button class="btn bg" onclick="cm('mNewEnq')">Cancel</button><button class="btn bp" onclick="createEnq()">Create Enquiry</button></div>
+  </div>
+</div>
+
+<div class="mo" id="mAppt">
+  <div class="modal">
+    <div class="mh"><div class="mt">Book Appointment</div><button class="mc" onclick="cm('mAppt')">✕</button></div>
+    <div class="fg2">
+      <div class="fg"><label class="fl">Student Name</label><input class="fi" id="a-stu" placeholder="Student full name"></div>
+      <div class="fg"><label class="fl">Officer</label><select class="fsl" id="a-off"><option>James Patel (Visa)</option><option>Sarah Chen (Academic)</option><option>Michael O'Donnell (Graduation)</option><option>Fanny Alvi (Welfare)</option><option>Emma Williams (Financial)</option><option>Karen Thompson (Manager)</option></select></div>
+      <div class="fg"><label class="fl">Date</label><input class="fi" type="date" id="a-date"></div>
+      <div class="fg"><label class="fl">Time</label><select class="fsl" id="a-time"><option>9:00 AM</option><option>9:30 AM</option><option>10:00 AM</option><option>10:30 AM</option><option>11:00 AM</option><option>11:30 AM</option><option>2:00 PM</option><option>2:30 PM</option><option>3:00 PM</option><option>3:30 PM</option></select></div>
+      <div class="fg ff"><label class="fl">Mode</label><select class="fsl" id="a-mode"><option>Online (Teams)</option><option>In Person</option></select></div>
+      <div class="fg ff"><label class="fl">Topic / Enquiry Ref</label><input class="fi" id="a-topic" placeholder="Brief topic or enquiry ID"></div>
+    </div>
+    <div class="fa"><button class="btn bg" onclick="cm('mAppt')">Cancel</button><button class="btn bp" onclick="bookAppt()">Confirm Booking</button></div>
+  </div>
+</div>
+
+<!-- ══ CHATBOT ══ -->
+<div class="cbc" id="cbWidget" style="display:none">
+  <div class="cwin" id="cwin">
+    <div class="chdr"><div class="cav">🤖</div><div><div class="cname">UniBot</div><div class="cstat">Student Support Assistant • Online</div></div><button class="cx" onclick="togChat()">✕</button></div>
+    <div class="cmsgs" id="cmsgs"><div class="cm bot"><div class="cb">Hello! I'm UniBot 👋 How can I help you today?</div></div></div>
+    <div class="qrs" id="qrs">
+      <button class="qr" onclick="qr('How do I submit an enquiry?')">How to submit?</button>
+      <button class="qr" onclick="qr('What are the response times?')">Response times</button>
+      <button class="qr" onclick="qr('Book an appointment')">Book appointment</button>
+      <button class="qr" onclick="qr('Track my enquiry')">Track enquiry</button>
+    </div>
+    <div class="cir"><input class="cinp" id="cinp" placeholder="Type a message…" onkeypress="if(event.key==='Enter')sendChat()"><button class="csend" onclick="sendChat()">➤</button></div>
+  </div>
+  <button class="ctog" id="ctog" onclick="togChat()">💬</button>
+</div>
+<div class="tc" id="tc"></div>
+
+<script>
+// ══ DATA ══
+const USERS = [
+  {email:'vanan@abc.edu.au',          pw:'student123', role:'student', name:'Nguyen Van An',   label:'Student'},
+  {email:'lily.tran@abc.edu.au',      pw:'admin123',   role:'admin',   name:'Lily Tran',       label:'Administrative Officer'},
+  {email:'sarah.chen@abc.edu.au',     pw:'officer123', role:'officer', name:'Sarah Chen',      label:'Support Officer'},
+  {email:'james.patel@abc.edu.au',    pw:'officer123', role:'officer', name:'James Patel',     label:'Support Officer'},
+  {email:'karen.thompson@abc.edu.au', pw:'password123',role:'manager', name:'Karen Thompson',  label:'Manager'},
+  {email:'helen.moore@abc.edu.au',    pw:'director123',role:'manager', name:'Dr. Helen Moore', label:'Director'},
+];
+const DEFS = {
+  student:{email:'vanan@abc.edu.au',pw:'student123'},
+  admin:  {email:'lily.tran@abc.edu.au',pw:'admin123'},
+  officer:{email:'sarah.chen@abc.edu.au',pw:'officer123'},
+  manager:{email:'karen.thompson@abc.edu.au',pw:'password123'},
+};
+let enquiries = [
+  {id:'ENQ-2025-0085',student:'Nguyen Van An', sid:'S220001',email:'vanan@abc.edu.au',     category:'Visa / International',type:'Complex',status:'Assigned',     assignedTo:'James Patel',     submitted:'2025-04-01',subject:'Student visa renewal process',       desc:'I need guidance on renewing my student visa before it expires next month. What documents are required?'},
+  {id:'ENQ-2025-0086',student:'Tran Thi Lan',  sid:'S220034',email:'thilan@abc.edu.au',    category:'Academic',           type:'Complex',status:'Escalated',    assignedTo:'Sarah Chen',      submitted:'2025-04-02',subject:'Grade appeal — BISM2001',             desc:'I believe my final exam was graded incorrectly. I scored well in the midterm and believe the final mark does not reflect my performance.'},
+  {id:'ENQ-2025-0087',student:'Le Minh Duc',   sid:'S219876',email:'minhduc@abc.edu.au',   category:'Financial',          type:'General',status:'Complete',     assignedTo:'Emma Williams',   submitted:'2025-04-03',subject:'Scholarship application deadline',     desc:'Could you confirm the deadline for the merit scholarship application for Semester 2 2025?'},
+  {id:'ENQ-2025-0088',student:'Pham Thi Thu',  sid:'S220102',email:'thithu@abc.edu.au',    category:'Welfare',            type:'General',status:'Feedback Sent',assignedTo:'Fanny Alvi',      submitted:'2025-04-04',subject:'Mental health support services',       desc:'I have been feeling very stressed and would like to know what counselling services are available on campus.'},
+  {id:'ENQ-2025-0089',student:'Hoang Bao Long',sid:'S220045',email:'baolong@abc.edu.au',   category:'Graduation & Career',type:'General',status:'Complete',     assignedTo:"Michael O'Donnell",submitted:'2025-04-05',subject:'Graduation ceremony date confirmation',desc:'I need to confirm the date and time of the graduation ceremony for my program.'},
+  {id:'ENQ-2025-0090',student:'Vu Thi Hoa',    sid:'S220199',email:'thihoa@abc.edu.au',    category:'Academic',           type:'General',status:'Open',         assignedTo:'—',               submitted:'2025-04-22',subject:'Course enrolment issue',               desc:'I am unable to enrol in MGTM3002 online. The system shows it is full.'},
+  {id:'ENQ-2025-0091',student:'Do Thanh Trung',sid:'S220211',email:'thanhtrung@abc.edu.au',category:'Visa / International',type:'Complex',status:'Assigned',    assignedTo:'James Patel',     submitted:'2025-04-23',subject:'Study abroad program documentation',   desc:'I am planning the exchange program next semester and need help with documentation.'},
+  {id:'ENQ-2025-0092',student:'Bui Ngoc Mai',  sid:'S220308',email:'ngocmai@abc.edu.au',   category:'Financial',          type:'Complex',status:'Escalated',    assignedTo:'Karen Thompson',  submitted:'2025-04-24',subject:'Tuition fee payment plan',             desc:'I am experiencing financial hardship and would like to request a payment plan for outstanding tuition fees.'},
+  {id:'ENQ-2025-0093',student:'Nguyen Van An', sid:'S220001',email:'vanan@abc.edu.au',     category:'Visa / International',type:'General',status:'Open',        assignedTo:'—',               submitted:'2025-04-25',subject:'Health insurance card replacement',    desc:'My student health insurance card was lost. How do I get a replacement?'},
+];
+let appts = [
+  {student:'Nguyen Van An', officer:'James Patel (Visa)',      date:25,time:'2:00', ampm:'PM',topic:'Visa renewal',           mode:'Online'},
+  {student:'Tran Thi Lan',  officer:'Karen Thompson (Manager)',date:26,time:'10:00',ampm:'AM',topic:'Grade appeal escalation',mode:'In Person'},
+  {student:'Do Thanh Trung',officer:'James Patel (Visa)',      date:27,time:'3:00', ampm:'PM',topic:'Exchange documentation', mode:'Online'},
+  {student:'Bui Ngoc Mai',  officer:'Karen Thompson (Manager)',date:28,time:'11:00',ampm:'AM',topic:'Tuition fee plan',       mode:'In Person'},
+];
+let cu = null;
+
+// ══ NAV CONFIG ══
+const NAVS = {
+  student:[
+    {sec:'My Portal'},
+    {pg:'s-home',   icon:'🏠',label:'Home'},
+    {pg:'s-submit', icon:'✍️',label:'Submit Enquiry'},
+    {pg:'s-track',  icon:'🔍',label:'My Enquiries'},
+    {pg:'appts',    icon:'📅',label:'My Appointments'},
+    {sec:'Support'},
+    {pg:'policy',   icon:'📜',label:'Service Policy'},
+  ],
+  admin:[
+    {sec:'Overview'},
+    {pg:'dashboard',icon:'📊',label:'Dashboard'},
+    {sec:'Enquiries'},
+    {pg:'enquiries',icon:'📋',label:'All Enquiries',badge:'open'},
+    {pg:'log-enq',  icon:'✍️',label:'Log New Enquiry'},
+    {sec:'Scheduling'},
+    {pg:'appts',    icon:'📅',label:'Appointments'},
+    {sec:'System'},
+    {pg:'policy',   icon:'📜',label:'Service Policy'},
+  ],
+  officer:[
+    {sec:'Overview'},
+    {pg:'dashboard',icon:'📊',label:'My Dashboard'},
+    {sec:'My Cases'},
+    {pg:'enquiries',icon:'📋',label:'Assigned to Me',badge:'assigned'},
+    {sec:'Scheduling'},
+    {pg:'appts',    icon:'📅',label:'Appointments'},
+    {sec:'System'},
+    {pg:'policy',   icon:'📜',label:'Service Policy'},
+  ],
+  manager:[
+    {sec:'Overview'},
+    {pg:'dashboard',icon:'📊',label:'Dashboard'},
+    {sec:'Enquiries'},
+    {pg:'enquiries',icon:'📋',label:'All Enquiries',badge:'open'},
+    {pg:'log-enq',  icon:'✍️',label:'Log Enquiry'},
+    {sec:'Scheduling'},
+    {pg:'appts',    icon:'📅',label:'Appointments'},
+    {sec:'Analytics'},
+    {pg:'reports',  icon:'📈',label:'KPI Reports'},
+    {sec:'Team'},
+    {pg:'org',      icon:'🏢',label:'Organisation'},
+    {sec:'System'},
+    {pg:'policy',   icon:'📜',label:'Service Policy'},
+  ],
+};
+const HOME = {student:'s-home',admin:'dashboard',officer:'dashboard',manager:'dashboard'};
+const TITLES = {'s-home':'Student Portal','s-submit':'Submit Enquiry','s-track':'My Enquiries',dashboard:'Dashboard',enquiries:'Enquiries','log-enq':'Log Enquiry',appts:'Appointments',reports:'KPI Reports',org:'Organisation Chart',policy:'Service Policy',detail:'Enquiry Detail'};
+
+// ══ AUTH ══
+let selLoginRole = 'manager';
+function selRole(r) {
+  selLoginRole = r;
+  document.querySelectorAll('.rcard').forEach(c=>c.classList.remove('sel'));
+  document.getElementById('rc-'+r).classList.add('sel');
+  document.getElementById('lemail').value = DEFS[r].email;
+  document.getElementById('lpw').value    = DEFS[r].pw;
+  document.getElementById('lerr').style.display='none';
+}
+function togglePw() { const i=document.getElementById('lpw'); i.type=i.type==='password'?'text':'password'; }
+function doLogin() {
+  const email = document.getElementById('lemail').value.trim().toLowerCase();
+  const pw    = document.getElementById('lpw').value;
+  const btn   = document.getElementById('lbtn');
+  document.getElementById('lerr').style.display='none';
+  if (!email) { showLE('Please enter your university email.'); return; }
+  if (!pw)    { showLE('Please enter your password.'); return; }
+  btn.disabled=true; btn.innerHTML='<span class="spin"></span>Signing in…';
+  setTimeout(()=>{
+    const u = USERS.find(x=>x.email===email&&x.pw===pw);
+    if (!u) { btn.disabled=false; btn.innerHTML='Sign In to UniLink'; showLE('Invalid email or password.'); return; }
+    cu = u;
+    document.getElementById('loginScreen').classList.add('lfo');
+    setTimeout(()=>{
+      document.getElementById('loginScreen').style.display='none';
+      document.getElementById('mainApp').style.display='block';
+      boot(u);
+    },400);
+  },800);
+}
+function showLE(m) { document.getElementById('lerrMsg').textContent=m; document.getElementById('lerr').style.display='block'; }
+function doLogout() {
+  cu=null;
+  document.getElementById('mainApp').style.display='none';
+  const ls=document.getElementById('loginScreen');
+  ls.style.display='flex'; ls.classList.remove('lfo');
+  document.getElementById('lbtn').disabled=false; document.getElementById('lbtn').innerHTML='Sign In to UniLink';
+  document.getElementById('cbWidget').style.display='none';
+  toast('You have been signed out.','info');
+}
+
+// ══ BOOT ══
+function boot(u) {
+  document.getElementById('ucRole').textContent  = u.label;
+  document.getElementById('ucName').textContent  = u.name;
+  document.getElementById('ucEmail').textContent = u.email;
+  // Topbar
+  const tr = document.getElementById('tright'); tr.innerHTML='';
+  if (u.role!=='student') { const b=document.createElement('button'); b.className='btn bp bsm'; b.innerHTML='+ New Enquiry'; b.onclick=()=>om('mNewEnq'); tr.appendChild(b); }
+  const lb=document.createElement('button'); lb.className='btn bg bsm'; lb.innerHTML='🚪 Sign Out'; lb.onclick=doLogout; tr.appendChild(lb);
+  buildNav(u.role);
+  document.getElementById('cbWidget').style.display='block';
+  showPage(HOME[u.role]);
+  toast('Welcome back, '+u.name+'! 👋','success');
+}
+
+function buildNav(role) {
+  const nav=document.getElementById('sideNav'); nav.innerHTML='';
+  (NAVS[role]||[]).forEach(item=>{
+    if(item.sec){ nav.innerHTML+=`<div class="nav-sec">${item.sec}</div>`; return; }
+    let badge='';
+    if(item.badge==='open'){ const n=enquiries.filter(e=>e.status==='Open').length; if(n)badge=`<span class="nbadge">${n}</span>`; }
+    else if(item.badge==='assigned'&&cu){ const n=enquiries.filter(e=>e.assignedTo.includes(cu.name.split(' ')[0])).length; if(n)badge=`<span class="nbadge">${n}</span>`; }
+    nav.innerHTML+=`<div class="nav-item" id="ni-${item.pg}" onclick="showPage('${item.pg}')"><span class="nav-icon">${item.icon}</span>${item.label}${badge}</div>`;
+  });
+}
+
+// ══ ACCESS CONTROL ══
+// Derive the set of pages a role can access directly from NAVS — single source of truth
+function allowedPages(role) {
+  return (NAVS[role]||[]).filter(i=>i.pg).map(i=>i.pg);
+}
+
+// ══ ROUTER ══
+function showPage(pg) {
+  const role = cu ? cu.role : 'manager';
+  // Guard — silently redirect to home if role has no access
+  if (!allowedPages(role).includes(pg)) { showPage(HOME[role]); return; }
+
+  document.getElementById('pgTitle').textContent = TITLES[pg]||pg;
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+  const ni=document.getElementById('ni-'+pg); if(ni)ni.classList.add('active');
+  const ca=document.getElementById('ca');
+
+  if(pg==='s-home')        ca.innerHTML=rStudentHome();
+  else if(pg==='s-submit') ca.innerHTML=rStudentSubmit();
+  else if(pg==='s-track')  ca.innerHTML=rStudentTrack();
+  else if(pg==='dashboard')ca.innerHTML=rDash(role);
+  else if(pg==='enquiries'){ca.innerHTML=rEnqTable(role); bindTable(role);}
+  else if(pg==='log-enq')  ca.innerHTML=rLogEnq();
+  else if(pg==='appts')    {ca.innerHTML=rAppts(role); renderCal();}
+  else if(pg==='reports')  ca.innerHTML=rReports();
+  else if(pg==='org')      ca.innerHTML=rOrg();
+  else if(pg==='policy')   ca.innerHTML=rPolicy();
+}
+
+// ══ STUDENT PAGES ══
+function rStudentHome() {
+  const my=enquiries.filter(e=>e.email===cu.email);
+  const open=my.filter(e=>!['Complete','Feedback Sent'].includes(e.status)).length;
+  return `
+  <div class="phero"><h2>Hello, ${cu.name.split(' ')[0]}! 👋</h2><p>Welcome to UniLink. Submit enquiries, book appointments, or track your existing cases below.</p></div>
+  <div style="display:grid;grid-template-columns:repeat(3,1fr);gap:14px;margin-bottom:22px">
+    <div class="sc" onclick="showPage('s-submit')"><div class="sl">Quick Action</div><div style="font-size:28px;margin:10px 0">✍️</div><div style="font-weight:700;font-size:15px">Submit New Enquiry</div><div style="font-size:12px;color:var(--gray-400);margin-top:4px">We'll route it to the right team</div></div>
+    <div class="sc" onclick="showPage('appts')"><div class="sl">Quick Action</div><div style="font-size:28px;margin:10px 0">📅</div><div style="font-weight:700;font-size:15px">Book Appointment</div><div style="font-size:12px;color:var(--gray-400);margin-top:4px">Schedule a meeting with a support officer</div></div>
+    <div class="sc" onclick="showPage('s-track')"><div class="sl">My Cases</div><div class="sv" style="color:var(--teal-light)">${my.length}</div><div style="font-size:12px;color:var(--gray-400)">${open} active · ${my.length-open} resolved</div></div>
+  </div>
+  <div class="card"><div class="ct">📋 My Recent Enquiries</div>
+    ${my.length===0?`<p style="color:var(--gray-400);font-size:13px">No enquiries yet. <a onclick="showPage('s-submit')" style="color:var(--teal-light);cursor:pointer">Submit one now →</a></p>`
+    :`<div class="eg">${my.slice(0,3).map(e=>`<div class="ec" onclick="showDetail('${e.id}')"><div style="display:flex;justify-content:space-between;align-items:flex-start"><div><div class="esub">${e.subject}</div><div class="emeta">${e.id} · ${e.category} · ${e.submitted}</div></div><span class="pill ${pc(e.status)}">${e.status}</span></div></div>`).join('')}</div>
+    ${my.length>3?`<button class="btn bg bsm" style="margin-top:10px" onclick="showPage('s-track')">View all ${my.length} →</button>`:''}`}
+  </div>`;
+}
+
+function rStudentSubmit() {
+  return `
+  <div class="phero"><h2>Submit an Enquiry</h2><p>General enquiries: responded within 2 business days. Complex cases: within 5 days.</p></div>
+  <div class="card" style="max-width:660px">
+    <div class="ct">📝 Enquiry Form</div>
+    <div class="fg2">
+      <div class="fg ff"><label class="fl">Student Account</label><input class="fi" value="${cu.name} — ${cu.email}" disabled style="opacity:.55"></div>
+      <div class="fg"><label class="fl">Category *</label><select class="fsl" id="sf-cat"><option value="">Select category</option><option>Academic</option><option>Visa / International</option><option>Financial</option><option>Welfare</option><option>Graduation &amp; Career</option><option>General</option></select></div>
+      <div class="fg"><label class="fl">Priority</label><select class="fsl" id="sf-pri"><option>Normal</option><option>Urgent</option></select></div>
+      <div class="fg ff"><label class="fl">Subject *</label><input class="fi" id="sf-subj" placeholder="Brief subject of your enquiry"></div>
+      <div class="fg ff"><label class="fl">Description *</label><textarea class="fta" id="sf-desc" placeholder="Describe your enquiry in detail…" style="min-height:110px"></textarea></div>
+    </div>
+    <div style="margin-top:16px;display:flex;gap:10px">
+      <button class="btn bp" onclick="submitStu()">Submit Enquiry</button>
+      <button class="btn bg" onclick="document.getElementById('sf-subj').value='';document.getElementById('sf-desc').value='';document.getElementById('sf-cat').value=''">Clear</button>
+    </div>
+    <div style="margin-top:14px;background:rgba(13,148,136,.08);border:1px solid rgba(13,148,136,.2);border-radius:8px;padding:12px;font-size:13px;color:rgba(255,255,255,.75)">ℹ️ After submitting, track status in <strong>My Enquiries</strong>. You'll be notified by email on any updates.</div>
+  </div>`;
+}
+
+function submitStu() {
+  const cat=document.getElementById('sf-cat').value, subj=document.getElementById('sf-subj').value.trim(), desc=document.getElementById('sf-desc').value.trim();
+  if(!cat||!subj||!desc){toast('Please fill in all required fields.','error');return;}
+  const id='ENQ-2025-0'+String(enquiries.length+94);
+  enquiries.unshift({id,student:cu.name,sid:cu.email.split('@')[0].toUpperCase(),email:cu.email,category:cat,type:'General',status:'Open',assignedTo:'—',submitted:new Date().toISOString().split('T')[0],subject:subj,desc});
+  toast(`✅ Enquiry ${id} submitted! We'll respond within 2 business days.`,'success');
+  showPage('s-track');
+}
+
+function rStudentTrack() {
+  const my=enquiries.filter(e=>e.email===cu.email);
+  return `<div class="ct" style="margin-bottom:14px">🔍 My Enquiries (${my.length})</div>
+  <div class="eg">${my.length===0?`<div class="card"><p style="color:var(--gray-400);font-size:13px">No enquiries yet. <a onclick="showPage('s-submit')" style="color:var(--teal-light);cursor:pointer">Submit one now →</a></p></div>`
+  :my.map(e=>`<div class="ec" onclick="showDetail('${e.id}')">
+    <div style="display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:6px"><div><div class="esub">${e.subject}</div><div class="emeta">${e.id} · ${e.category}</div></div><span class="pill ${pc(e.status)}">${e.status}</span></div>
+    <div style="display:flex;gap:12px;font-size:12px;color:var(--gray-400)"><span>📅 ${e.submitted}</span><span>${e.type==='Complex'?'⚡ Complex':'📄 General'}</span>${e.assignedTo!=='—'?`<span>👤 ${e.assignedTo}</span>`:''}</div>
+  </div>`).join('')}</div>`;
+}
+
+// ══ DASHBOARD ══
+function rDash(role) {
+  // Each role sees data scoped to what they're responsible for
+  const base = role==='officer'
+    ? enquiries.filter(e=>e.assignedTo.includes(cu.name.split(' ')[0]))
+    : enquiries;
+  const open=base.filter(e=>e.status==='Open').length;
+  const esc=base.filter(e=>e.status==='Escalated').length;
+  const done=base.filter(e=>e.status==='Complete').length;
+  const assigned=base.filter(e=>e.status==='Assigned').length;
+
+  // Officer dashboard: focused on their own workload
+  if (role === 'officer') {
+    return `
+    <div class="sgrid">
+      <div class="sc"><div class="sl">My Assigned Cases</div><div class="sv" style="color:var(--teal-light)">${base.length}</div><div class="sd du">Active workload</div></div>
+      <div class="sc"><div class="sl">In Progress</div><div class="sv" style="color:var(--blue)">${assigned}</div><div class="sd">Currently assigned to me</div></div>
+      <div class="sc"><div class="sl">Escalated</div><div class="sv" style="color:var(--gold)">${esc}</div><div class="sd" style="color:var(--gold)">Awaiting manager review</div></div>
+      <div class="sc"><div class="sl">Resolved</div><div class="sv" style="color:var(--green)">${done}</div><div class="sd du">↑ Completed this period</div></div>
+    </div>
+    <div class="card" style="margin-bottom:16px"><div class="ct">📋 My Cases — Quick Overview</div>
+      <table class="kpt"><thead><tr><th>Enquiry</th><th>Student</th><th>Category</th><th>Status</th><th></th></tr></thead><tbody>
+        ${base.slice(0,6).map(e=>`<tr style="cursor:pointer" onclick="showDetail('${e.id}')">
+          <td><span class="eid">${e.id}</span></td>
+          <td style="font-weight:500">${e.student}</td>
+          <td style="font-size:12px;color:var(--gray-400)">${e.category}</td>
+          <td><span class="pill ${pc(e.status)}">${e.status}</span></td>
+          <td><button class="btn bg bsm" onclick="event.stopPropagation();showDetail('${e.id}')">Open</button></td>
+        </tr>`).join('')}
+      </tbody></table>
+      ${base.length>6?`<button class="btn bg bsm" style="margin-top:10px" onclick="showPage('enquiries')">View all ${base.length} cases →</button>`:''}
+    </div>
+    <div class="card"><div class="ct">🕐 Recent Activity</div><div class="af">
+      <div class="aitem"><div class="aico" style="background:rgba(34,197,94,.15)">✅</div><div><div class="atxt">Enquiry #ENQ-2025-0089 marked Complete</div><div class="atime">Today, 10:32 AM</div></div></div>
+      <div class="aitem"><div class="aico" style="background:rgba(245,158,11,.15)">⚠️</div><div><div class="atxt">Enquiry #ENQ-2025-0086 escalated to Manager</div><div class="atime">Today, 9:00 AM</div></div></div>
+      <div class="aitem"><div class="aico" style="background:rgba(59,130,246,.15)">📅</div><div><div class="atxt">Appointment with Tran Thi Lan confirmed — Mar 26, 10:00 AM</div><div class="atime">Yesterday, 4:45 PM</div></div></div>
+    </div></div>`;
+  }
+
+  // Admin dashboard: triage focus — what needs to be assigned/actioned
+  if (role === 'admin') {
+    const unassigned = enquiries.filter(e=>e.status==='Open');
+    return `
+    <div class="sgrid">
+      <div class="sc"><div class="sl">Total Enquiries</div><div class="sv" style="color:var(--teal-light)">${enquiries.length}</div><div class="sd du">April 2025</div></div>
+      <div class="sc"><div class="sl">Unassigned (Open)</div><div class="sv" style="color:var(--red)">${open}</div><div class="sd dd">Needs triage</div></div>
+      <div class="sc"><div class="sl">Assigned</div><div class="sv" style="color:var(--blue)">${assigned}</div><div class="sd">Being handled</div></div>
+      <div class="sc"><div class="sl">Resolved</div><div class="sv" style="color:var(--green)">${done}</div><div class="sd du">↑ Complete</div></div>
+    </div>
+    ${unassigned.length>0?`<div class="card" style="margin-bottom:16px"><div class="ct" style="color:var(--red)">🚨 Needs Triage — ${unassigned.length} Unassigned Enquiries</div>
+      <table class="kpt"><thead><tr><th>ID</th><th>Student</th><th>Category</th><th>Type</th><th>Submitted</th><th></th></tr></thead><tbody>
+        ${unassigned.map(e=>`<tr style="cursor:pointer" onclick="showDetail('${e.id}')">
+          <td><span class="eid">${e.id}</span></td>
+          <td style="font-weight:500">${e.student}</td>
+          <td style="font-size:12px;color:var(--gray-400)">${e.category}</td>
+          <td><span class="pill ${e.type==='Complex'?'py':'pgy'}">${e.type}</span></td>
+          <td style="font-size:12px;color:var(--gray-400)">${e.submitted}</td>
+          <td><button class="btn bp bsm" onclick="event.stopPropagation();showDetail('${e.id}')">Assign →</button></td>
+        </tr>`).join('')}
+      </tbody></table>
+    </div>`:'<div class="card" style="margin-bottom:16px;border-color:rgba(34,197,94,.3)"><div style="display:flex;align-items:center;gap:10px"><span style="font-size:24px">✅</span><div><div style="font-weight:700">All enquiries assigned!</div><div style="font-size:13px;color:var(--gray-400)">No unassigned enquiries at this time.</div></div></div></div>'}
+    <div class="card"><div class="ct">🕐 Recent Activity</div><div class="af">
+      <div class="aitem"><div class="aico" style="background:rgba(59,130,246,.15)">📋</div><div><div class="atxt">Enquiry #ENQ-2025-0090 logged — awaiting assignment</div><div class="atime">Today, 10:00 AM</div></div></div>
+      <div class="aitem"><div class="aico" style="background:rgba(13,148,136,.15)">✅</div><div><div class="atxt">Enquiry #ENQ-2025-0091 assigned to James Patel</div><div class="atime">Yesterday, 3:10 PM</div></div></div>
+      <div class="aitem"><div class="aico" style="background:rgba(59,130,246,.15)">📅</div><div><div class="atxt">Appointment booked: Nguyen Van An with James Patel — Mar 25</div><div class="atime">Yesterday, 2:00 PM</div></div></div>
+    </div></div>`;
+  }
+
+  // Manager dashboard: full overview with KPIs
+  return `
+  <div class="sgrid">
+    <div class="sc"><div class="sl">Total Enquiries</div><div class="sv" style="color:var(--teal-light)">${base.length}</div><div class="sd du">April 2025</div></div>
+    <div class="sc"><div class="sl">Open / Unassigned</div><div class="sv" style="color:var(--red)">${open}</div><div class="sd dd">Awaiting triage</div></div>
+    <div class="sc"><div class="sl">Escalated</div><div class="sv" style="color:var(--gold)">${esc}</div><div class="sd" style="color:var(--gold)">9% rate — within target</div></div>
+    <div class="sc"><div class="sl">Resolved</div><div class="sv" style="color:var(--green)">${done}</div><div class="sd du">↑ 80% resolution rate</div></div>
+  </div>
+  <div class="gc2">
+    <div class="card"><div class="ct">📊 KPI Performance — April 2025</div>${gauges()}</div>
+    <div style="display:flex;flex-direction:column;gap:14px">
+      <div class="card"><div class="ct">📌 Enquiry Status Breakdown</div>
+        <table class="kpt"><thead><tr><th>Status</th><th>Count</th><th>%</th></tr></thead><tbody>
+          <tr><td><span class="pill pgy">Open</span></td><td>5</td><td>2.5%</td></tr>
+          <tr><td><span class="pill pb">Assigned</span></td><td>17</td><td>8.5%</td></tr>
+          <tr><td><span class="pill pg">Complete</span></td><td>110</td><td>55%</td></tr>
+          <tr><td><span class="pill py">Escalated</span></td><td>18</td><td>9%</td></tr>
+          <tr><td><span class="pill pt">Feedback Sent</span></td><td>40</td><td>20%</td></tr>
+        </tbody></table>
+      </div>
+      <div class="card"><div class="ct">⭐ Student Satisfaction</div>
+        <table class="kpt"><tr><td style="color:var(--gray-400)">Feedback Received</td><td><strong>20</strong></td></tr><tr><td style="color:var(--gray-400)">Timeliness</td><td><strong>3.8/5</strong></td></tr><tr><td style="color:var(--gray-400)">Helpfulness</td><td><strong>4.5/5</strong></td></tr><tr><td style="color:var(--gray-400)">Overall</td><td><strong>4.0/5</strong></td></tr></table>
+      </div>
+    </div>
+  </div>
+  <div class="card"><div class="ct">🕐 Recent Activity</div><div class="af">
+    <div class="aitem"><div class="aico" style="background:rgba(34,197,94,.15)">✅</div><div><div class="atxt">Enquiry #ENQ-2025-0089 resolved by Sarah Chen</div><div class="atime">Today, 10:32 AM</div></div></div>
+    <div class="aitem"><div class="aico" style="background:rgba(245,158,11,.15)">⚠️</div><div><div class="atxt">Enquiry #ENQ-2025-0092 escalated to Manager — financial hardship</div><div class="atime">Today, 9:15 AM</div></div></div>
+    <div class="aitem"><div class="aico" style="background:rgba(59,130,246,.15)">📅</div><div><div class="atxt">Appointment confirmed: Nguyen Van An with James Patel — Mar 25, 2:00 PM</div><div class="atime">Yesterday, 4:45 PM</div></div></div>
+    <div class="aitem"><div class="aico" style="background:rgba(13,148,136,.15)">📩</div><div><div class="atxt">Feedback email sent to 12 students</div><div class="atime">Yesterday, 3:00 PM</div></div></div>
+  </div></div>`;
+}
+
+function gauges() {
+  return [[`Overall Resolution Rate`,80,`≥80%`,80,true],[`Resolution Time – General`,70,`≥90%`,70,false],[`Resolution Time – Complex`,70,`≥85%`,70,false],[`Assignment Time (Complex)`,65,`≥80%`,65,false],[`Appointment Confirmation`,60,`≥80%`,60,false],[`Escalation Rate`,9,`≤10%`,91,true],[`Student Satisfaction`,75,`≥80%`,75,false]]
+  .map(([n,a,t,p,m])=>`<div class="gi"><div class="gh"><span class="gn">${n}</span><div class="gv"><span class="ga" style="color:${m?'var(--green)':'var(--red)'}">${a}%</span><span class="gt">/ ${t}</span><span class="pill ${m?'pg':'pr'}">${m?'Met':'Missed'}</span></div></div><div class="gtr"><div class="gf" style="width:${p}%;background:${m?'var(--green)':p<70?'var(--red)':'var(--orange)'}"></div></div></div>`).join('');
+}
+
+// ══ ENQUIRY TABLE ══
+function rEnqTable(role) {
+  return `<div class="toolbar">
+    <input class="sbox" placeholder="🔍  Search by student, ID or subject…" oninput="filterTbl(this.value)">
+    <select class="fsel" onchange="filterSt(this.value)"><option value="">All Statuses</option><option>Open</option><option>Assigned</option><option>Complete</option><option>Escalated</option><option>Feedback Sent</option></select>
+    <select class="fsel" onchange="filterTy(this.value)"><option value="">All Types</option><option>General</option><option>Complex</option></select>
+    ${role!=='officer'?`<button class="btn bp" onclick="om('mNewEnq')">+ New Enquiry</button>`:''}
+  </div>
+  <div class="tw"><table class="dt" id="etbl">
+    <thead><tr><th>ID</th><th>Student</th><th>Type</th><th>Category</th>${role!=='officer'?'<th>Assigned To</th>':''}<th>Status</th><th>Submitted</th><th></th></tr></thead>
+    <tbody id="etbody"></tbody>
+  </table></div>`;
+}
+
+let _fe = [];
+function bindTable(role) {
+  _fe = role==='officer' ? enquiries.filter(e=>e.assignedTo.includes(cu.name.split(' ')[0])) : [...enquiries];
+  renderRows(_fe, role);
+}
+function renderRows(data, role) {
+  role = role||(cu?cu.role:'manager');
+  const tb=document.getElementById('etbody'); if(!tb)return;
+  tb.innerHTML=data.map(e=>`<tr onclick="showDetail('${e.id}')">
+    <td><span class="eid">${e.id}</span></td>
+    <td><div style="font-weight:500">${e.student}</div><div style="font-size:11px;color:var(--gray-400)">${e.sid}</div></td>
+    <td><span class="pill ${e.type==='Complex'?'py':'pgy'}">${e.type}</span></td>
+    <td style="font-size:13px">${e.category}</td>
+    ${role!=='officer'?`<td style="font-size:12px;color:var(--gray-400)">${e.assignedTo}</td>`:''}
+    <td><span class="pill ${pc(e.status)}">${e.status}</span></td>
+    <td style="font-size:12px;color:var(--gray-400)">${e.submitted}</td>
+    <td><button class="btn bg bsm" onclick="event.stopPropagation();showDetail('${e.id}')">View</button></td>
+  </tr>`).join('');
+}
+function filterTbl(q) { const b=getBase(); _fe=b.filter(e=>e.student.toLowerCase().includes(q.toLowerCase())||e.id.toLowerCase().includes(q.toLowerCase())||e.subject.toLowerCase().includes(q.toLowerCase())); renderRows(_fe); }
+function filterSt(s)  { const b=getBase(); _fe=s?b.filter(e=>e.status===s):[...b]; renderRows(_fe); }
+function filterTy(t)  { const b=getBase(); _fe=t?b.filter(e=>e.type===t):[...b]; renderRows(_fe); }
+function getBase()    { return cu&&cu.role==='officer'?enquiries.filter(e=>e.assignedTo.includes(cu.name.split(' ')[0])):[...enquiries]; }
+
+// ══ DETAIL ══
+function showDetail(id) {
+  const e=enquiries.find(x=>x.id===id); if(!e)return;
+  const role=cu?cu.role:'manager';
+  document.getElementById('pgTitle').textContent='Enquiry Detail';
+  document.querySelectorAll('.nav-item').forEach(n=>n.classList.remove('active'));
+
+  // ── Build action panel by role ──────────────────────────────────────
+  // STUDENT: read-only case info + feedback if resolved
+  // ADMIN:   triage (assign officer, set status) + appointments
+  // OFFICER: resolve own cases (complete / escalate) — no reassign, no appt scheduling
+  // MANAGER: full control (all of above + assign + schedule)
+
+  let actPanel;
+  if (role === 'student') {
+    actPanel = `<div class="apanel">
+      <div class="asec"><div class="ast">Case Info</div><div style="font-size:12px;display:flex;flex-direction:column;gap:7px">
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Enquiry ID</span><span class="eid">${e.id}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Status</span><span class="pill ${pc(e.status)}">${e.status}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Category</span><span>${e.category}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Type</span><span>${e.type}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Submitted</span><span>${e.submitted}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">SLA Target</span><span style="color:var(--teal-light)">${e.type==='Complex'?'5 business days':'2 business days'}</span></div>
+      </div></div>
+      ${['Complete','Feedback Sent'].includes(e.status)?`<div class="asec"><div class="ast">Rate Your Experience</div><div style="font-size:13px;color:var(--gray-400);margin-bottom:8px">How was your support experience?</div><div style="font-size:24px;cursor:pointer;letter-spacing:4px" onclick="toast('Thank you for your feedback! ⭐','success')">⭐⭐⭐⭐⭐</div></div>`:''}
+    </div>`;
+
+  } else if (role === 'officer') {
+    // Officer: can mark complete, escalate, send feedback — but CANNOT assign or schedule appointments
+    actPanel = `<div class="apanel">
+      <div class="asec"><div class="ast">Update Status</div><div class="abg">
+        <button class="btn bp bsm" onclick="updSt('${e.id}','Complete')">✅ Mark Complete</button>
+        <button class="btn bw bsm" onclick="updSt('${e.id}','Escalated')">⚠ Escalate to Manager</button>
+        <button class="btn bg bsm" onclick="updSt('${e.id}','Feedback Sent')">📩 Send Feedback Email</button>
+      </div></div>
+      <div class="asec"><div class="ast">SLA Tracker</div><div style="font-size:12px;display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Type</span><span>${e.type}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">SLA</span><span style="color:var(--teal-light)">${e.type==='Complex'?'5 business days':'2 business days'}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Submitted</span><span>${e.submitted}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Assigned To</span><span style="font-size:11px">${e.assignedTo}</span></div>
+      </div></div>
+    </div>`;
+
+  } else if (role === 'admin') {
+    // Admin: triage — assign officer, set status, schedule appointments
+    actPanel = `<div class="apanel">
+      <div class="asec"><div class="ast">Triage — Update Status</div><div class="abg">
+        <button class="btn bo bsm" onclick="updSt('${e.id}','Assigned')">Set as Assigned</button>
+        <button class="btn bp bsm" onclick="updSt('${e.id}','Complete')">✅ Mark Complete</button>
+        <button class="btn bw bsm" onclick="updSt('${e.id}','Escalated')">⚠ Escalate</button>
+      </div></div>
+      <div class="asec"><div class="ast">Assign Officer</div><div class="abg">
+        <select class="fsl" id="asel" style="font-size:12px"><option>James Patel (Visa)</option><option>Sarah Chen (Academic)</option><option>Michael O'Donnell (Graduation)</option><option>Fanny Alvi (Welfare)</option><option>Emma Williams (Financial)</option></select>
+        <button class="btn bo bsm" onclick="assignEnq('${e.id}')">Confirm Assignment</button>
+      </div></div>
+      <div class="asec"><div class="ast">Appointment</div><div class="abg">
+        <button class="btn bp bsm" onclick="om('mAppt')">📅 Schedule Appointment</button>
+        <button class="btn bg bsm" onclick="toast('Availability email sent.','success')">📧 Send Availability Email</button>
+      </div></div>
+      <div class="asec"><div class="ast">SLA Tracker</div><div style="font-size:12px;display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Type</span><span>${e.type}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">SLA</span><span style="color:var(--teal-light)">${e.type==='Complex'?'5 business days':'2 business days'}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Submitted</span><span>${e.submitted}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Assigned To</span><span style="font-size:11px">${e.assignedTo}</span></div>
+      </div></div>
+    </div>`;
+
+  } else {
+    // Manager: full control
+    actPanel = `<div class="apanel">
+      <div class="asec"><div class="ast">Update Status</div><div class="abg">
+        <button class="btn bo bsm" onclick="updSt('${e.id}','Assigned')">Set as Assigned</button>
+        <button class="btn bp bsm" onclick="updSt('${e.id}','Complete')">✅ Mark Complete</button>
+        <button class="btn bw bsm" onclick="updSt('${e.id}','Escalated')">⚠ Escalate</button>
+        <button class="btn bg bsm" onclick="updSt('${e.id}','Feedback Sent')">📩 Feedback Sent</button>
+      </div></div>
+      <div class="asec"><div class="ast">Assign Officer</div><div class="abg">
+        <select class="fsl" id="asel" style="font-size:12px"><option>James Patel (Visa)</option><option>Sarah Chen (Academic)</option><option>Michael O'Donnell (Graduation)</option><option>Fanny Alvi (Welfare)</option><option>Emma Williams (Financial)</option></select>
+        <button class="btn bo bsm" onclick="assignEnq('${e.id}')">Confirm Assignment</button>
+      </div></div>
+      <div class="asec"><div class="ast">Appointment</div><div class="abg">
+        <button class="btn bp bsm" onclick="om('mAppt')">📅 Schedule Appointment</button>
+        <button class="btn bg bsm" onclick="toast('Availability email sent.','success')">📧 Send Availability Email</button>
+      </div></div>
+      <div class="asec"><div class="ast">SLA Tracker</div><div style="font-size:12px;display:flex;flex-direction:column;gap:6px">
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Type</span><span>${e.type}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">SLA</span><span style="color:var(--teal-light)">${e.type==='Complex'?'5 business days':'2 business days'}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Submitted</span><span>${e.submitted}</span></div>
+        <div style="display:flex;justify-content:space-between"><span style="color:var(--gray-400)">Assigned To</span><span style="font-size:11px">${e.assignedTo}</span></div>
+      </div></div>
+    </div>`;
+  }
+
+  document.getElementById('ca').innerHTML = `
+  <button class="btn bg bsm" onclick="goBack()" style="margin-bottom:14px">← Back</button>
+  <div class="dgrid">
+    <div>
+      <div class="card" style="margin-bottom:14px">
+        <div style="display:flex;align-items:flex-start;justify-content:space-between;margin-bottom:14px">
+          <div><div style="font-family:'Playfair Display',serif;font-size:20px;font-weight:700;margin-bottom:3px">${e.subject}</div><div style="font-size:12px;color:var(--gray-400)">${e.id} · Submitted ${e.submitted}</div></div>
+          <span class="pill ${pc(e.status)}" style="font-size:12px;padding:5px 13px">${e.status}</span>
+        </div>
+        <div class="dmeta">
+          <div class="mi"><div class="mil">Student</div><div class="miv">${e.student} (${e.sid})</div></div>
+          <div class="mi"><div class="mil">Email</div><div class="miv" style="font-size:12px">${e.email}</div></div>
+          <div class="mi"><div class="mil">Category</div><div class="miv">${e.category}</div></div>
+          <div class="mi"><div class="mil">Type</div><div class="miv">${e.type}</div></div>
+        </div>
+      </div>
+      <div class="card"><div class="ct">💬 Communication Thread</div>
+        <div class="thread">
+          <div class="bubble"><div class="mhdr"><span class="msend">🎓 ${e.student}</span><span class="mtime">${e.submitted}, 10:14 AM</span></div><div class="mbody">${e.desc}</div></div>
+          ${e.status!=='Open'?`<div class="bubble staff"><div class="mhdr"><span class="msend">👤 ${e.assignedTo} (Staff)</span><span class="mtime">${e.submitted}, 2:30 PM</span></div><div class="mbody">Thank you for reaching out, ${e.student.split(' ')[0]}. I have reviewed your enquiry and will follow up shortly with the information you need.</div></div>`:''}
+        </div>
+        ${role!=='student'?`<div class="rbox"><div class="fl" style="margin-bottom:7px">Send Reply</div><textarea class="fta" placeholder="Type your reply…" style="margin-bottom:8px"></textarea><div style="display:flex;gap:8px"><button class="btn bp bsm" onclick="toast('Reply sent.','success')">Send Reply</button><button class="btn bg bsm" onclick="toast('Feedback email sent.','success')">📩 Feedback Email</button></div></div>`:''}
+      </div>
+    </div>
+    ${actPanel}
+  </div>`;
+}
+
+function updSt(id, st) { const e=enquiries.find(x=>x.id===id); if(e){e.status=st; toast(`Status updated to "${st}"`,'success'); showDetail(id);} }
+function assignEnq(id) { const s=document.getElementById('asel'); if(!s)return; const off=s.value; const e=enquiries.find(x=>x.id===id); if(e){e.assignedTo=off.split(' (')[0]; e.status='Assigned'; toast(`Assigned to ${off}`,'success'); showDetail(id);} }
+function goBack()      { const r=cu?cu.role:'manager'; showPage(r==='student'?'s-track':'enquiries'); }
+
+// ══ LOG ENQUIRY (admin/manager) ══
+function rLogEnq() {
+  return `<div class="card" style="max-width:660px"><div class="ct">✍️ Log New Enquiry</div>
+  <div class="fg2">
+    <div class="fg"><label class="fl">Student Name *</label><input class="fi" id="le-name" placeholder="Full name"></div>
+    <div class="fg"><label class="fl">Student ID *</label><input class="fi" id="le-sid" placeholder="S123456"></div>
+    <div class="fg"><label class="fl">Email</label><input class="fi" id="le-email" placeholder="student@abc.edu.au"></div>
+    <div class="fg"><label class="fl">Category *</label><select class="fsl" id="le-cat"><option value="">Select</option><option>Academic</option><option>Visa / International</option><option>Financial</option><option>Welfare</option><option>Graduation &amp; Career</option><option>General</option></select></div>
+    <div class="fg"><label class="fl">Type</label><select class="fsl" id="le-type"><option>General</option><option>Complex</option></select></div>
+    <div class="fg"><label class="fl">Channel</label><select class="fsl" id="le-ch"><option>Email</option><option>Phone</option><option>Walk-in</option></select></div>
+    <div class="fg ff"><label class="fl">Subject *</label><input class="fi" id="le-subj" placeholder="Brief subject"></div>
+    <div class="fg ff"><label class="fl">Description</label><textarea class="fta" id="le-desc" placeholder="Details…"></textarea></div>
+  </div>
+  <div style="margin-top:16px;display:flex;gap:10px">
+    <button class="btn bp" onclick="logEnq()">Create &amp; Log</button>
+    <button class="btn bg" onclick="showPage('enquiries')">Cancel</button>
+  </div></div>`;
+}
+function logEnq() {
+  const name=document.getElementById('le-name').value.trim(), sid=document.getElementById('le-sid').value.trim(), cat=document.getElementById('le-cat').value, subj=document.getElementById('le-subj').value.trim();
+  if(!name||!sid||!cat||!subj){toast('Please fill in all required fields.','error');return;}
+  const id='ENQ-2025-0'+String(enquiries.length+94);
+  enquiries.unshift({id,student:name,sid,email:document.getElementById('le-email').value,category:cat,type:document.getElementById('le-type').value,status:'Open',assignedTo:'—',submitted:new Date().toISOString().split('T')[0],subject:subj,desc:document.getElementById('le-desc').value});
+  toast(`Enquiry ${id} created!`,'success'); showPage('enquiries');
+}
+function createEnq() {
+  const name=document.getElementById('mn-name').value.trim(), sid=document.getElementById('mn-sid').value.trim(), cat=document.getElementById('mn-cat').value, subj=document.getElementById('mn-subj').value.trim();
+  if(!name||!sid||!cat||!subj){toast('Please fill in all required fields.','error');return;}
+  const id='ENQ-2025-0'+String(enquiries.length+94);
+  enquiries.unshift({id,student:name,sid,email:document.getElementById('mn-email').value,category:cat,type:document.getElementById('mn-type').value,status:'Open',assignedTo:'—',submitted:new Date().toISOString().split('T')[0],subject:subj,desc:document.getElementById('mn-desc').value});
+  cm('mNewEnq'); toast(`Enquiry ${id} created!`,'success');
+}
+
+// ══ APPOINTMENTS ══
+function rAppts(role) {
+  return `<div style="display:grid;grid-template-columns:1fr 350px;gap:18px">
+  <div><div class="card" style="margin-bottom:14px"><div class="ct" style="justify-content:space-between">📅 March 2026
+    ${role==='student'?`<button class="btn bo bsm" onclick="om('mAppt')">Request Appointment</button>`:`<button class="btn bp bsm" onclick="om('mAppt')">+ Book Appointment</button>`}
+  </div><div class="cg" id="calGrid"></div></div></div>
+  <div class="card"><div class="ct">📌 ${role==='student'?'My Appointments':'Upcoming Appointments'}</div><div class="al" id="apptList"></div></div>
+  </div>`;
+}
+
+function renderCal() {
+  const g=document.getElementById('calGrid'); if(!g)return;
+  const days=['Mon','Tue','Wed','Thu','Fri','Sat','Sun'];
+  g.innerHTML=days.map(d=>`<div class="ch">${d}</div>`).join('');
+  for(let i=0;i<6;i++) g.innerHTML+=`<div class="cd" style="opacity:.15"></div>`;
+  for(let d=1;d<=31;d++){
+    const ap=appts.find(a=>a.date===d);
+    g.innerHTML+=`<div class="cd ${d===23?'today':''} ${ap?'ha':''}"><div class="cn">${d}</div>${ap?`<div class="ca ${ap.mode==='Online'?'online':''}">${ap.time} ${ap.ampm}</div>`:''}</div>`;
+  }
+  const al=document.getElementById('apptList'); if(!al)return;
+  const role=cu?cu.role:'manager';
+  const vis = role==='student' ? appts.filter(a=>a.student===cu.name) : appts;
+  al.innerHTML = vis.length===0 ? `<div style="color:var(--gray-400);font-size:13px">No appointments scheduled.</div>` :
+  vis.map(a=>`<div class="ac"><div class="atb"><div class="at">${a.time}</div><div class="aa">${a.ampm}</div><div class="aa" style="font-size:9px;margin-top:1px">Mar ${a.date}</div></div>
+  <div class="adv"></div><div class="ai"><div class="ast2">${a.student}</div><div class="atop">${a.officer} · ${a.topic}</div><div style="margin-top:3px"><span class="pill ${a.mode==='Online'?'pb':'pt'}">${a.mode}</span></div></div>
+  <div style="display:flex;gap:5px"><button class="btn bg bsm" onclick="toast('Details copied.','success')">📋</button>${role!=='student'?`<button class="btn bg bsm" onclick="toast('Appointment cancelled.','warning')">✕</button>`:''}</div>
+  </div>`).join('');
+}
+
+function bookAppt() {
+  const stu=document.getElementById('a-stu').value.trim(), dv=document.getElementById('a-date').value;
+  if(!stu||!dv){toast('Please enter student name and date.','error');return;}
+  const d=new Date(dv); const t=document.getElementById('a-time').value;
+  appts.push({student:stu,officer:document.getElementById('a-off').value,date:d.getDate(),time:t.split(' ')[0],ampm:t.split(' ')[1]||'AM',topic:document.getElementById('a-topic').value||'General meeting',mode:document.getElementById('a-mode').value});
+  cm('mAppt'); toast(`Appointment booked for ${stu}!`,'success'); renderCal();
+}
+
+// ══ REPORTS (manager only) ══
+function rReports() {
+  return `<div class="gc3">
+    <div class="card" style="cursor:pointer" onclick="toast('Generating PDF…','info')"><div style="font-size:28px;margin-bottom:10px">📊</div><div style="font-weight:700;font-size:15px;margin-bottom:4px">Monthly Performance Report</div><div style="font-size:12px;color:var(--gray-400)">April 2025 — Karen Thompson</div><button class="btn bo bsm" style="margin-top:12px">Download PDF</button></div>
+    <div class="card" style="cursor:pointer" onclick="toast('Loading analytics…','info')"><div style="font-size:28px;margin-bottom:10px">📋</div><div style="font-weight:700;font-size:15px;margin-bottom:4px">Enquiry Analytics</div><div style="font-size:12px;color:var(--gray-400)">Volume, resolution time, categorisation</div><button class="btn bo bsm" style="margin-top:12px">View Report</button></div>
+    <div class="card" style="cursor:pointer" onclick="toast('Loading survey data…','info')"><div style="font-size:28px;margin-bottom:10px">⭐</div><div style="font-weight:700;font-size:15px;margin-bottom:4px">Student Satisfaction</div><div style="font-size:12px;color:var(--gray-400)">Quarterly survey results</div><button class="btn bo bsm" style="margin-top:12px">View Report</button></div>
+  </div>
+  <div style="display:grid;grid-template-columns:2fr 1fr;gap:16px">
+    <div class="card"><div class="ct">📈 KPI Summary — April 2025</div>
+      <table class="kpt" style="width:100%"><thead><tr><th>KPI</th><th>Target</th><th>Actual</th><th>Met?</th><th>Progress</th></tr></thead><tbody>
+        ${[['Overall Resolution Rate','≥ 80%',80,true],['Resolution Time (General)','≥ 90%',70,false],['Resolution Time (Complex)','≥ 85%',70,false],['Assignment Time (Complex)','≥ 80%',65,false],['Appointment Confirmation','≥ 80%',60,false],['Escalation Rate','≤ 10%',9,true],['Student Satisfaction','≥ 80%',75,false]]
+        .map(([n,t,a,m])=>`<tr><td>${n}</td><td>${t}</td><td style="color:${m?'var(--green)':'var(--red)'};font-weight:600">${a}%</td><td><span class="pill ${m?'pg':'pr'}">${m?'Yes':'No'}</span></td><td><div class="kbt"><div class="kbf" style="width:${a}%;background:${m?'var(--green)':a<70?'var(--red)':'var(--orange)'}"></div></div></td></tr>`).join('')}
+      </tbody></table>
+    </div>
+    <div class="card"><div class="ct">💡 Recommendations</div><div style="display:flex;flex-direction:column;gap:10px;font-size:13px">
+      <div style="background:rgba(239,68,68,.07);border:1px solid rgba(239,68,68,.2);border-radius:8px;padding:11px"><div style="color:var(--red);font-weight:600;margin-bottom:3px">⚠ Resolution Times Below Target</div>70% vs targets of 90%/85%. UniLink automation should reduce delays.</div>
+      <div style="background:rgba(245,158,11,.07);border:1px solid rgba(245,158,11,.2);border-radius:8px;padding:11px"><div style="color:var(--gold);font-weight:600;margin-bottom:3px">⚡ Assignment Delays</div>65% vs 80% target. Automated routing will address this.</div>
+      <div style="background:rgba(13,148,136,.07);border:1px solid rgba(13,148,136,.2);border-radius:8px;padding:11px"><div style="color:var(--teal-light);font-weight:600;margin-bottom:3px">✅ Escalation Under Control</div>9% rate — within the ≤10% policy target.</div>
+    </div></div>
+  </div>`;
+}
+
+// ══ ORG ══
+function rOrg() {
+  return `<div class="card" style="overflow-x:auto"><div class="ct">🏢 Organisation — Student Support &amp; Services</div>
+  <div class="org-tree"><div class="onw">
+    <div class="on director"><div class="onn">Dr. Helen Moore</div><div class="onr">Director of Student Support &amp; Services</div></div>
+    <div class="ol"></div>
+    <div class="oc"><div class="ocw">
+      <div class="on manager"><div class="onn">Karen Thompson</div><div class="onr">Manager, Student Supports &amp; Services</div></div>
+      <div class="ol"></div>
+      <div class="oc" style="flex-wrap:wrap;max-width:900px">
+        ${[['Lily Tran','Administrative Officer'],['James Patel','Officer – Visa & International'],['Sarah Chen','Officer – Academic'],["Michael O'Donnell",'Officer – Graduation & Career'],['Fanny Alvi','Officer – Welfare'],['Emma Williams','Officer – Financial']]
+        .map(([n,r])=>`<div class="ocw"><div class="ol" style="height:14px"></div><div class="on"><div class="onn">${n}</div><div class="onr">${r}</div></div></div>`).join('')}
+      </div>
+    </div></div>
+  </div></div></div>`;
+}
+
+// ══ POLICY ══
+function rPolicy() {
+  return `<div class="card" style="max-width:780px"><div class="ct">📜 Student Enquiry Support Service Policy</div>
+  <div style="display:flex;gap:20px;margin-bottom:18px;flex-wrap:wrap">
+    <div><div style="color:var(--gray-400);font-size:12px">Approved by</div><div style="font-weight:600">Director of Student Support and Services</div></div>
+    <div><div style="color:var(--gray-400);font-size:12px">Version</div><div style="font-weight:600">1.0</div></div>
+    <div><div style="color:var(--gray-400);font-size:12px">Date</div><div style="font-weight:600">18 July 2023</div></div>
+  </div>
+  ${[['Purpose','This document outlines the policies and expectations for the Student Enquiry Support Service at ABC University, providing operational guidelines to ensure consistent, timely, and high-quality responses.'],['Service Channels','Email (primary channel) · Phone calls · Walk-in enquiries · Scheduled appointments (online or in person)'],['Service Hours','Monday to Friday, 9:00 AM – 5:00 PM (excluding public holidays). Appointments outside these hours require Manager approval.'],['Communication Standards','Professional and courteous language · Clear, concise, and accurate information · Document all interactions in the system.']]
+  .map(([t,c])=>`<div style="margin-bottom:14px"><div style="color:var(--teal-light);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:5px">${t}</div><p style="font-size:14px;color:rgba(255,255,255,.8);line-height:1.7">${c}</p></div>`).join('')}
+  <div style="margin-bottom:14px"><div style="color:var(--teal-light);font-weight:700;font-size:11px;text-transform:uppercase;letter-spacing:1px;margin-bottom:8px">Response Times (SLAs)</div>
+    ${[['General Enquiries','Response within 2 business days'],['Complex Enquiries','Assigned ≤ 1 day · Resolved ≤ 5 days'],['Appointment Confirmation','Within 2 business days after assignment']]
+    .map(([l,r])=>`<div style="background:rgba(255,255,255,.04);border-radius:8px;padding:10px 14px;display:flex;justify-content:space-between;margin-bottom:6px;font-size:14px"><span>${l}</span><span style="color:var(--teal-light);font-weight:600">${r}</span></div>`).join('')}
+  </div></div>`;
+}
+
+// ══ HELPERS ══
+function pc(s) { return {Open:'pgy',Assigned:'pb',Complete:'pg',Escalated:'py','Feedback Sent':'pt'}[s]||'pgy'; }
+function om(id)  { document.getElementById(id).classList.add('open'); }
+function cm(id)  { document.getElementById(id).classList.remove('open'); }
+document.querySelectorAll('.mo').forEach(o=>o.addEventListener('click',function(e){if(e.target===this)this.classList.remove('open');}));
+
+function toast(msg, type='success') {
+  const icons={success:'✅',error:'❌',warning:'⚠️',info:'ℹ️'};
+  const t=document.createElement('div'); t.className=`toast ${type==='error'?'te':type==='warning'?'tw':''}`;
+  t.innerHTML=`<span style="font-size:15px">${icons[type]||'ℹ️'}</span><span style="font-size:13px">${msg}</span>`;
+  document.getElementById('tc').appendChild(t); setTimeout(()=>t.remove(),3500);
+}
+
+// ══ CHATBOT ══
+const BOT = {
+  'submit':'Go to <strong>Submit Enquiry</strong> in the sidebar. Fill in category, subject and description. ✉️',
+  'response':'General: <strong>2 business days</strong>. Complex: assigned within 1 day, resolved within <strong>5 days</strong>.',
+  'appointment':'Go to <strong>Appointments</strong> and click Request Appointment. 📅',
+  'track':'Go to <strong>My Enquiries</strong> to see all your cases in real time. 🔍',
+  'escalat':'If unresolved, an officer can escalate your case to the Manager.',
+  'default':'Our support team is available Mon–Fri, 9 AM–5 PM. 😊'
+};
+function togChat() { const w=document.getElementById('cwin'); w.classList.toggle('open'); document.getElementById('ctog').textContent=w.classList.contains('open')?'✕':'💬'; }
+function qr(t) { addCM(t,'user'); document.getElementById('qrs').innerHTML=''; setTimeout(()=>{const k=Object.keys(BOT).find(k=>t.toLowerCase().includes(k)); addCM(BOT[k]||BOT['default'],'bot');},600); }
+function sendChat() { const i=document.getElementById('cinp'); const t=i.value.trim(); if(!t)return; addCM(t,'user'); i.value=''; document.getElementById('qrs').innerHTML=''; setTimeout(()=>{const k=Object.keys(BOT).find(k=>t.toLowerCase().includes(k)); addCM(BOT[k]||BOT['default'],'bot');},600); }
+function addCM(t,s) { const m=document.getElementById('cmsgs'); const d=document.createElement('div'); d.className=`cm ${s}`; d.innerHTML=`<div class="cb">${t}</div>`; m.appendChild(d); m.scrollTop=m.scrollHeight; }
+</script>
+</body>
+</html>
